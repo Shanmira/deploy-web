@@ -1,12 +1,12 @@
 import React from "react";
-import { AuthProvider } from "./auth-provider";
 import { Session } from "next-auth";
+import { AuthProvider } from "./auth-provider";
 export const RootProvider = ({
   children,
   session,
 }: {
   children: React.ReactNode;
-  session: Session;
+  session: Session | null;
 }) => {
   return <AuthProvider session={session}>{children}</AuthProvider>;
 };
