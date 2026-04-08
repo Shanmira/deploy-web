@@ -6,11 +6,17 @@ import { decrypt } from "@/lib/encryption";
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
-const LoginIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then((obj) => obj.LoginIllustration),
-  { ssr: false }
-);
+type LoginIllustrationProps = {
+  lottieWidth?: number
+}
+
+const LoginIllustration = ({ lottieWidth = 200 }: LoginIllustrationProps) => {
+  return (
+    <div style={{ width: lottieWidth }}>
+      {/* isi lottie */}
+    </div>
+  )
+}
 
 export default function Login() {
   const { status } = useSession();
