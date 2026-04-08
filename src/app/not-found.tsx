@@ -4,13 +4,19 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import React from "react";
 
-const NotFoundIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then((obj) => obj.NotFoundIllustration),
-  {
-    ssr: false,
-  }
-);
+
+type NotFoundIllustrationProps = {
+  lottieWidth?: number
+}
+
+const NotFoundIllustration = ({ lottieWidth = 200 }: NotFoundIllustrationProps) => {
+  return (
+    <div style={{ width: lottieWidth }}>
+      {/* isi lottie */}
+    </div>
+  )
+}
+
 const NotFound = () => {
   return (
     <div className="h-[80vh] flex flex-col items-center justify-center">
