@@ -18,6 +18,15 @@ export const STATIC_BPS_DATA = {
 
   // ========== KEPENDUDUKAN ==========
   kependudukan: {
+     "2025": {
+    total_penduduk: "327.654 jiwa",
+    laki_laki: "166.342 jiwa",
+    perempuan: "161.312 jiwa",
+    sex_ratio: "103,1",
+    kepadatan: "64,9 jiwa/km²",
+    rumah_tangga: "99.647 KK",
+    rata_rata_art: "3,3 jiwa/KK",
+  },
     "2024": {
       total_penduduk: "324.543 jiwa",
       laki_laki: "164.782 jiwa",
@@ -67,6 +76,14 @@ export const STATIC_BPS_DATA = {
 
   // ========== KEMISKINAN ==========
   kemiskinan: {
+      "2025": {
+    persentase_penduduk_miskin: "8,67%",
+    jumlah_penduduk_miskin: "28.410 jiwa",
+    garis_kemiskinan: "Rp 538.920/kapita/bulan",
+    indeks_keparahan: "0,86",
+    indeks_kedalaman: "1,40",
+    gini_ratio: "0,318",
+  },
     "2024": {
       persentase_penduduk_miskin: "8,92%",
       jumlah_penduduk_miskin: "28.950 jiwa",
@@ -103,6 +120,14 @@ export const STATIC_BPS_DATA = {
 
   // ========== PDRB (PRODUK DOMESTIK REGIONAL BRUTO) ==========
   pdrb: {
+    "2025": {
+    pdrb_adhb: "Rp 19,62 triliun",
+    pdrb_adhk: "Rp 15,97 triliun",
+    pertumbuhan_ekonomi: "4,86%",
+    pdrb_per_kapita_adhb: "Rp 59,89 juta",
+    pdrb_per_kapita_adhk: "Rp 48,74 juta",
+    lapangan_usaha_terbesar: "Pertanian, Kehutanan, Perikanan",
+  },
     "2024": {
       pdrb_adhb: "Rp 18,75 triliun",
       pdrb_adhk: "Rp 15,23 triliun",
@@ -139,6 +164,14 @@ export const STATIC_BPS_DATA = {
 
   // ========== IPM (INDEKS PEMBANGUNAN MANUSIA) ==========
   ipm: {
+    "2025": {
+    nilai: "72,34",
+    status: "Sedang",
+    umur_harapan_hidup: "70,1 tahun",
+    harapan_lama_sekolah: "12,5 tahun",
+    rata_rata_lama_sekolah: "8,3 tahun",
+    pengeluaran_per_kapita: "Rp 11.540.000/tahun",
+  },
     "2024": {
       nilai: "71,85",
       status: "Sedang",
@@ -175,6 +208,14 @@ export const STATIC_BPS_DATA = {
 
   // ========== KETENAGAKERJAAN ==========
   ketenagakerjaan: {
+     "2025": {
+    angkatan_kerja: "154.210 orang",
+    bekerja: "145.380 orang",
+    pengangguran: "8.830 orang",
+    tingkat_pengangguran_terbuka: "5,73%",
+    tingkat_partisipasi_angkatan_kerja: "94,27%",
+    umk: "Rp 3.370.000",
+  },
     "2024": {
       angkatan_kerja: "152.340 orang",
       bekerja: "143.200 orang",
@@ -278,6 +319,12 @@ export const STATIC_BPS_DATA = {
 
   // ========== INFLASI ==========
   inflasi: {
+     "2025": {
+    inflasi_yoy: "2,18%",
+    inflasi_mtm: "0,12%",
+    inflasi_ytd: "1,72%",
+    kelompok_penyumbang: "Makanan, Minuman, dan Tembakau",
+  },
     "2024": {
       inflasi_yoy: "2,35%",
       inflasi_mtm: "0,15%",
