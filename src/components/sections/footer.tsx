@@ -30,8 +30,8 @@ const SOCIAL_MEDIA = [
     icon: <MailIcon />,
   },
   {
-    title: "085714272305",
-    href: "https://wa.me/6285714272305",
+    title: "082173054213",
+    href: "https://wa.me/6282173054213",
     icon: <PhoneIcon />,
   },
 ];

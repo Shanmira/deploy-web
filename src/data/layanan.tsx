@@ -1,47 +1,24 @@
 "use client";
 
 import dynamic from "next/dynamic";
-const BukuTamuIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then((obj) => obj.BukuTamuIllustration),
-  {
-    ssr: false,
-  }
-);
-const PermintaanDataIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then(
-      (obj) => obj.PermintaanDataIllustration
-    ),
-  {
-    ssr: false,
-  }
-);
-const SiitungIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then((obj) => obj.SiitungIllustration),
-  {
-    ssr: false,
-  }
-);
+const BukuTamuIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.BukuTamuIllustration), {
+  ssr: false,
+});
+const PermintaanDataIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.PermintaanDataIllustration), {
+  ssr: false,
+});
+const SiitungIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.SiitungIllustration), {
+  ssr: false,
+});
+const DataIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.DataIllustration), { ssr: false });
 
-const PengaduanIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then(
-      (obj) => obj.PengaduanIllustration
-    ),
-  {
-    ssr: false,
-  }
-);
+const PengaduanIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.PengaduanIllustration), {
+  ssr: false,
+});
 
-const StatalkIllustration = dynamic(
-  () =>
-    import("@/components/lotties/hero").then((obj) => obj.StatalkIllustration),
-  {
-    ssr: false,
-  }
-);
+const StatalkIllustration = dynamic(() => import("@/components/lotties/hero").then((obj) => obj.StatalkIllustration), {
+  ssr: false,
+});
 
 export const ORGANIZATIONS = [
   {
@@ -89,14 +66,7 @@ export const ORGANIZATIONS = [
   { name: "STAI Tanjung Jabung Barat", kind: "Sekolah" },
 ];
 
-export const JENIS_PENGADUAN = [
-  "Layanan Perpustakaan",
-  "Layanan Rekomendasi Statistik",
-  "Layanan Konsultasi Statistik",
-  "Layanan Pembinaan Statistik",
-  "Layanan Teknologi Informasi",
-  "Lainnya",
-];
+export const JENIS_PENGADUAN = ["Layanan Perpustakaan", "Layanan Rekomendasi Statistik", "Layanan Konsultasi Statistik", "Layanan Pembinaan Statistik", "Layanan Teknologi Informasi", "Lainnya"];
 
 export const LAYANANS: {
   title: string;
@@ -113,27 +83,31 @@ export const LAYANANS: {
   {
     title: "Permintaan Data",
     href: "https://silastik.bps.go.id/v3/index.php/site/login/",
-    description:
-      "Buat permintaan data statistik dan Pantau progres eksekusi permintaan data anda di sini",
+    description: "Buat permintaan data statistik dan Pantau progres eksekusi permintaan data anda di sini",
     icon: <PermintaanDataIllustration />,
   },
   {
     title: "StaTalk",
-    href: "https://wa.me/6285714272305",
+    href: "https://wa.me/6282173054213",
     description: "Layanan chat menggunakan whatsapp",
     icon: <StatalkIllustration />,
   },
   {
-    title: "SIITUNG",
-    href: "https://siitung.fikrianggara.dev",
-    description: "Data Strategis Kabupaten Tanjung Jabung Barat",
+    title: "PRISMA",
+    href: "https://prisma.bpsjambi.id/indicator/1507",
+    description: "Platform Indikator Statistik Wilayah Jambi Kabupaten Tanjung Jabung Barat",
     icon: <SiitungIllustration />,
   },
   {
     title: "Pengaduan & Whistleblowing System",
     href: "/pengaduan?mode=pengaduan",
-    description:
-      "Adukan keluhan terhadap layanan kami atau pelanggaran yang anggota kami lakukan",
+    description: "Adukan keluhan terhadap layanan kami atau pelanggaran yang anggota kami lakukan",
     icon: <PengaduanIllustration />,
+  },
+  {
+    title: "Survei Kebutuhan Data 2026",
+    href: "https://skd.bps.go.id/skd/p/1507",
+    description: "Bantu kami menjadi lebih baik dengan mengisi Survei Kebutuhan Data",
+    icon: <DataIllustration />,
   },
 ];

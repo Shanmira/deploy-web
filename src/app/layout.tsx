@@ -6,6 +6,7 @@ import "./globals.css";
 import Navbar from "@/components/sections/navbar";
 import { Footer } from "@/components/sections/footer";
 import { Toaster } from "@/components/ui/toaster";
+import FloatingChat from "@/components/sections/floating-chat";
 
 const pjs = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default async function RootLayout({
           <Navbar />
           <div className="m-auto">{children}</div>
           <Toaster></Toaster>
+          <FloatingChat/>
           <Footer />
         </body>
       </RootProvider>
