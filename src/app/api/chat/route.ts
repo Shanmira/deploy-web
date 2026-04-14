@@ -10,7 +10,7 @@ const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 
 const GROQ_MODEL_FAST = "llama-3.1-8b-instant";
 const GROQ_MODEL_SMART = "llama-3.3-70b-versatile";
-const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+const credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS!);
 const bigquery = new BigQuery({
   // keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
   credentials,
