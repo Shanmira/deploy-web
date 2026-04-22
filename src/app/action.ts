@@ -2,6 +2,8 @@
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
 import { guestsTable, pengaduanTable, usersTable } from "@/db/schema";
+import { auth } from "@/lib/auth";
+
 
 export async function encryptState(state: string) {
   const { encrypt } = await import("@/lib/encryption");
@@ -125,6 +127,11 @@ export const deleteGuest = async ({ id }: { id: number }) => {
 };
 
 export const getGuests = async () => {
+  const session = await auth();
+
+  if (session?.user?.role !== "admin") {
+    throw new Error("Unauthorized");
+  }
   return await db
     .select()
     .from(guestsTable)

@@ -11,7 +11,7 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
-import { LAYANANS } from "@/data/layanan";
+import Menu from "@/data/layanan";
 import { useSession, signOut } from "next-auth/react";
 import { NavbarProfile } from "@/components/profile";
 
@@ -67,15 +67,7 @@ const Navbar = () => {
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <ul className="grid gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                  {LAYANANS.map((layanan) => (
-                    <ListItem
-                      key={layanan.title}
-                      title={layanan.title}
-                      href={layanan.href}
-                    >
-                      {layanan.description}
-                    </ListItem>
-                  ))}
+                  <Menu />
                 </ul>
               </NavigationMenuContent>
             </NavigationMenuItem>
@@ -104,15 +96,6 @@ const Navbar = () => {
                       >
                         Sign Out
                       </li>
-                      {/* {LAYANANS.map((layanan) => (
-                        <ListItem
-                          key={layanan.title}
-                          title={layanan.title}
-                          href={layanan.href}
-                        >
-                          {layanan.description}
-                        </ListItem>
-                      ))} */}
                     </ul>
                   </NavigationMenuContent>
                 </>

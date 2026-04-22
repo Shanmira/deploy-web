@@ -2,7 +2,7 @@
 import React from "react";
 import { HandHeartIcon } from "lucide-react";
 import Link from "next/link";
-import { LAYANANS } from "@/data/layanan";
+import Menu from "@/data/layanan";
 import dynamic from "next/dynamic";
 
 const HeroIllustration = dynamic(
@@ -52,30 +52,7 @@ export default function Page() {
           Layanan Kami
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
-          {LAYANANS.map((layanan) => (
-            <Link
-              key={layanan.title}
-              href={layanan.href}
-              className="h-full p-4 sm:p-5 md:p-6 border border-dashed rounded-xl hover:border-sky-500 hover:bg-sky-50 transition-colors duration-200 flex flex-row items-center gap-4"
-            >
-              {/* Ikon */}
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex-shrink-0">
-                {layanan.icon}
-              </div>
-
-              {/* Teks */}
-              <div className="flex flex-col gap-2 flex-1 min-w-0">
-                <h3 className="text-sm sm:text-base md:text-lg font-semibold text-blue-950 leading-snug">
-                  {layanan.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-500 leading-relaxed line-clamp-3">
-                  {layanan.description}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <Menu />
       </div>
 
     </div>
