@@ -68,11 +68,13 @@ export const updateUserByEmail = async ({
 
 export const addGuest = async ({
   email,
+  phone,
   organization,
   visitedAt,
   purpose,
 }: {
   email: string;
+  phone: string;
   organization: string;
   visitedAt: Date;
   purpose: string;
@@ -80,6 +82,7 @@ export const addGuest = async ({
   try {
     await db.insert(guestsTable).values({
       guestEmail: email,
+      guestPhone: phone,
       guestOrganization: organization,
       visitedAt: visitedAt.toISOString(),
       purpose: purpose,

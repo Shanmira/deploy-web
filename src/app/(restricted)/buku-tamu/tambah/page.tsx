@@ -32,6 +32,7 @@ const TambahTamu = () => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { toast } = useToast();
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     if (session && session.user) {
@@ -49,8 +50,8 @@ const TambahTamu = () => {
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (purpose === "" || organization === "") {
-      setErrorMessage("Tujuan kedatangan dan organisasi harus terisi");
+    if (purpose === "" || organization === "" || phone === "") {
+      setErrorMessage("Tujuan kedatangan, organisasi, dan nomor telepon harus terisi");
       return;
     }
     if (session && session.user) {
@@ -61,6 +62,7 @@ const TambahTamu = () => {
         organization: organization,
         visitedAt: date,
         purpose: purpose,
+        phone,
       });
       setTimeout(() => {
         setLoading(false);
@@ -106,7 +108,14 @@ const TambahTamu = () => {
             required={true}
             value={session?.user?.email ? session.user.email : ""}
           />
-
+          <InputText
+            label="Nomor Telepon"
+            name="phone"
+            type="tel"
+            required={true}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
           <ComboboxWithLabel
             options={organizationOptions}
             label="Pilih Organisasi"

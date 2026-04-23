@@ -6,6 +6,7 @@ import { sql } from "drizzle-orm"
 export const guests = pgTable("guests", {
 	id: integer().primaryKey().generatedAlwaysAsIdentity({ name: "guests_id_seq", startWith: 1, increment: 1, minValue: 1, maxValue: 2147483647, cache: 1 }),
 	email: varchar({ length: 255 }).notNull(),
+	phoneNumber: varchar({ length: 15 }).notNull(),
 	organization: varchar({ length: 255 }).notNull(),
 	visitedAt: date("visited_at").notNull(),
 	purpose: text().notNull(),

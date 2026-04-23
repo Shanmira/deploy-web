@@ -10,6 +10,7 @@ export type GUEST = {
   visitedAt: string;
   purpose: string;
   guestEmail: string;
+  guestPhone: string;
   guestOrganization: string;
   updatedBy: string | null;
   updatedAt: Date | null;

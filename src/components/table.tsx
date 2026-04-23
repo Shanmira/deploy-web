@@ -93,7 +93,8 @@ export const GuestTable = ({
         <TableRow>
           <TableHead className="text-xs md:text-sm">Pelapor</TableHead>
           <TableHead className="text-xs md:text-sm">Keperluan</TableHead>
-          <TableHead className="text-right text-xs md:text-sm">
+          <TableHead className="text-xs md:text-sm">No. Telepon</TableHead>
+          <TableHead className="text-xs md:text-sm">
             Tanggal Kedatangan
           </TableHead>
         </TableRow>
@@ -114,7 +115,10 @@ export const GuestTable = ({
               <TableCell className="text-xs md:text-sm">
                 {guest.guests.purpose}
               </TableCell>
-              <TableCell className="text-right text-xs  md:text-sm">
+              <TableCell className="text-xs md:text-sm">
+                {guest.guests.guestPhone}
+              </TableCell>
+              <TableCell className="text-xs  md:text-sm">
                 {guest.guests.visitedAt}
               </TableCell>
               <TableCell>

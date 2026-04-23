@@ -19,6 +19,9 @@ export const guestsTable = pgTable("guests", {
     .varchar("guest_email", { length: 255 })
     .references(() => usersTable.email)
     .notNull(),
+  guestPhone: t
+    .varchar("guest_phone", {length: 15})
+    .notNull(),
   guestOrganization: t.varchar("guest_organization", { length: 255 }).notNull(),
   visitedAt: t.date("visited_at").notNull(),
   purpose: t.text().notNull(),

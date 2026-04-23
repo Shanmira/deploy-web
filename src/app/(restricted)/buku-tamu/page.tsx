@@ -154,6 +154,12 @@ const EditGuestForm = ({ guest }: { guest: GUEST }) => {
         value={guest.guestEmail}
         disabled={true}
       />
+      <InputText
+        label={"Nomor Telepon"}
+        name={"phone"}
+        type="tel"
+        value={guest.guestPhone}
+      />
       <InputTextArea
         label={"Tujuan Kedatangan"}
         name={"purpose"}
@@ -270,6 +276,7 @@ const Page = () => {
     return filtered.map((guest) => {
       const temp: { [key: string]: string } = {};
       temp["email"] = guest.guestEmail;
+      temp["guest_phone"] = guest.guestPhone;
       temp["tujuan"] = guest.purpose;
       temp["tanggal_kunjungan"] = guest.visitedAt;
       return temp;

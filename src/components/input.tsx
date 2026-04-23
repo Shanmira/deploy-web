@@ -129,6 +129,7 @@ export const InputText = ({
   disabled = false,
   required = false,
   placeholder = "",
+  type = "text",
   onChange = () => {},
 }: {
   label: string;
@@ -137,6 +138,7 @@ export const InputText = ({
   disabled?: boolean;
   required?: boolean;
   placeholder?: string;
+  type?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
@@ -146,7 +148,7 @@ export const InputText = ({
       </label>
       <input
         name={name}
-        type="text"
+        type={type}
         value={value}
         onChange={onChange}
         disabled={disabled}
