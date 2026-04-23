@@ -33,9 +33,13 @@ import { PENGADUAN } from "@/types/types";
 export const GuestTable = ({
   dialogCallback,
   alertDialogCallback,
+  startDate,
+  endDate,
 }: {
   dialogCallback?: (guest: GUEST, state: boolean) => void;
   alertDialogCallback?: (guest: GUEST, state: boolean) => void;
+  startDate?: string,
+  endDate?: string,
 }) => {
   const { data: session } = useSession();
   const [guests, setGuests] = useState<GUEST_ACTION_RES[]>([]);
@@ -61,6 +65,25 @@ export const GuestTable = ({
     fetchUser(session?.user?.email || "");
   }, [session]);
 
+  const filtered = guests.filter((g) => {
+  if (!startDate && !endDate) return true;
+
+  const [y, m, d] = g.guests.visitedAt.split("-").map(Number);
+  const visitedAt = new Date(y, m - 1, d);
+
+  const start = startDate ? new Date(startDate) : null;
+  const end = endDate ? new Date(endDate) : null;
+
+  if (start) start.setHours(0, 0, 0, 0);
+  if (end) end.setHours(23, 59, 59, 999);
+
+  if (start && end) return visitedAt >= start && visitedAt <= end;
+  if (start) return visitedAt >= start;
+  if (end) return visitedAt <= end;
+
+  return true;
+});
+
   return (
     <Table>
       <TableCaption className="text-xs md:text-sm">
@@ -83,8 +106,7 @@ export const GuestTable = ({
             </TableCell>
           </TableRow>
         )}
-        {guests &&
-          guests.map((guest: GUEST_ACTION_RES) => (
+        {filtered.map((guest: GUEST_ACTION_RES) => (
             <TableRow key={guest.guests.id}>
               <TableCell className="font-medium text-xs md:text-sm">
                 {guest.users?.name}

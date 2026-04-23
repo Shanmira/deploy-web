@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { DatePicker } from "@/components/datepicker";
+import { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { GuestTable } from "@/components/table";
@@ -178,6 +180,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [guests, setGuests] = useState<GUEST[] | null>(null);
+  const [range, setRange] = useState<DateRange>({ from: undefined, to: undefined });
 
   const onAddGuestClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -234,11 +237,37 @@ const Page = () => {
   const onExportDataClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!guests || guests?.length === 0) return;
-    exportToExcel(remapData(guests), "daftar-tamu");
+    exportToExcel(
+      remapData(guests, range.from?.toISOString(), range.to?.toISOString()),
+      "daftar-tamu"
+    );
   };
 
-  const remapData = (guests: GUEST[]) => {
-    return guests.map((guest) => {
+  const remapData = (
+    guests: GUEST[],
+    startDate?: string,
+    endDate?: string
+  ) => {
+    const filtered = guests.filter((p => {
+      if (!startDate && !endDate) return true;
+
+      const [y, m, d] = p.visitedAt.split("-").map(Number);
+      const eventDate = new Date(y, m -1, d);
+
+      const start = startDate ? new Date(startDate): null;
+      const end = endDate ? new Date(endDate) : null;
+
+      if (start) start.setHours(0, 0, 0, 0);
+      if (end) end.setHours(23, 59, 59, 999);
+
+      if (start && end ) return eventDate >= start && eventDate <= end;
+      if (start) return eventDate >= start;
+      if (end) return eventDate <= end;
+
+      return true;
+    }))
+    
+    return filtered.map((guest) => {
       const temp: { [key: string]: string } = {};
       temp["email"] = guest.guestEmail;
       temp["tujuan"] = guest.purpose;
@@ -258,13 +287,14 @@ const Page = () => {
         </h2>
       </div>
       <div className="w-full flex md:justify-end items-end gap-2">
-        <Button
+        <DatePicker mode="range" value={range} callback={setRange} />
+        {/* <Button
           onClick={onAddGuestClick}
           className="flex items-center gap-2"
           size="sm"
         >
           {loading ? <Spinner /> : <Plus size={14} />} Tambah Tamu
-        </Button>
+        </Button> */}
         <Button
           size="sm"
           onClick={onExportDataClick}
@@ -309,6 +339,8 @@ const Page = () => {
         <GuestTable
           dialogCallback={dialogCallback}
           alertDialogCallback={alertDialogCallback}
+          startDate={range.from?.toISOString()}
+          endDate={range.to?.toISOString()}
         />
       </div>
     </div>

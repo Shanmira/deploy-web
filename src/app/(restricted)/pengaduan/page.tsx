@@ -479,13 +479,13 @@ const Page = () => {
               callback={setRange}
             />
 
-            <Button
+            {/* <Button
               onClick={onAddGuestClick}
               className="flex items-center gap-2"
               size="sm"
             >
               {loading ? <Spinner /> : <Plus size={14} />} Tambah Pengaduan
-            </Button>
+            </Button> */}
             <Button
               size="sm"
               onClick={onExportDataClick}
