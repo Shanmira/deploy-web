@@ -56,5 +56,7 @@ export const whistleblowingTable = pgTable("whistleblowing", {
   eventDate: t.date("event_date").notNull(),
   suspect: t.varchar({ length: 255 }).notNull(),
   description: t.text().notNull(),
+  proof: t.text().notNull(),
+  status: t.varchar({ length: 255 }).$default(() => "Belum Ditindaklanjut"),
   ...timestamps,
 });

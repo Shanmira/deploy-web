@@ -1,7 +1,7 @@
 "use server"; 
 import { db } from "@/db";
 import { eq } from "drizzle-orm";
-import { guestsTable, pengaduanTable, usersTable } from "@/db/schema";
+import { guestsTable, pengaduanTable, usersTable,whistleblowingTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
 
@@ -239,4 +239,104 @@ export const getPengaduan = async () => {
     .select()
     .from(pengaduanTable)
     .leftJoin(usersTable, eq(pengaduanTable.reporter, usersTable.email));
+};
+
+export const addWhistleblowing = async ({
+  email,
+  phone,
+  category,
+  suspect,
+  reportedAt,
+  description,
+  proof,
+}: {
+  email: string;
+  phone: string;
+  category: string;
+  suspect: string;
+  reportedAt: Date;
+  description: string;
+  proof: string;
+}) => {
+  try {
+    await db.insert(whistleblowingTable).values({
+      reporter: email,
+      phone: phone,
+      category: category,
+      suspect: suspect,
+      eventDate: reportedAt.toISOString(),
+      description: description,
+      proof: proof,
+    });
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+      return false;
+    }
+  }
+  return true;
+};
+
+export const updateWhistleBlowing = async ({
+  id,
+  reporter,
+  phone,
+  category,
+  suspect,
+  reportedAt,
+  description,
+  proof,
+  status,
+}: {
+  id: number;
+  reporter: string;
+  phone: string;
+  category: string;
+  suspect: string;
+  reportedAt: string;
+  description: string;
+  proof: string;
+  status: string;
+}) => {
+  try {
+    await db
+      .update(whistleblowingTable)
+      .set({
+        reporter: reporter,
+        phone,
+        category,
+        suspect,
+        eventDate: reportedAt,
+        description,
+        proof,
+        updatedAt: new Date(),
+        status,
+      })
+      .where(eq(whistleblowingTable.id, id));
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+      return false;
+    }
+  }
+  return true;
+};
+
+export const deleteWhistleblowing = async ({ id }: { id: number }) => {
+  try {
+    await db.delete(whistleblowingTable).where(eq(whistleblowingTable.id, id));
+  } catch (e) {
+    if (e instanceof Error) {
+      console.log(e.message);
+      return false;
+    }
+  }
+  return true;
+};
+
+export const getWhistleBlowing = async () => {
+  return await db
+    .select()
+    .from(whistleblowingTable)
+    .leftJoin(usersTable, eq(whistleblowingTable.reporter, usersTable.email));
 };

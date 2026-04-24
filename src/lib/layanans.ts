@@ -24,7 +24,8 @@ export function buildLayanans(role?: string): Layanan[] {
 			href: 
 				role === "admin" || role === "operator"
 					? "/pengaduan?mode=pengaduan"
-					: "pengaduan/tambah",
+					: "/pengaduan?mode=pengaduan",
+					// : "pengaduan/tambah",
 			description: "Adukan keluhan terhadap layanan kami atau pelanggaran yang anggota kami lakukan",
 		}
 	]

@@ -1,4 +1,5 @@
 import { JENIS_PENGADUAN } from "@/data/layanan";
+import { JENIS_PELANGGARAN } from "@/data/layanan";
 
 export const STATUS = [
   "Belum Ditindaklanjut",
@@ -7,6 +8,10 @@ export const STATUS = [
 ];
 
 export const PENGADUAN_OPTIONS = JENIS_PENGADUAN.map((o) => ({
+  value: o,
+  label: o,
+}));
+export const PELANGGARAN_OPTIONS = JENIS_PELANGGARAN.map((o) => ({
   value: o,
   label: o,
 }));

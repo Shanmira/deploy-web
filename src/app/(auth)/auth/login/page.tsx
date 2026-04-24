@@ -52,8 +52,8 @@ const LoginIllustration = ({ lottieWidth = 200 }: LoginIllustrationProps) => {
 
         {/* PANEL KIRI — Judul (hanya tampil di md ke atas) */}
         <div className="hidden md:flex w-full md:w-1/2 flex-col items-center justify-center gap-4 p-8 bg-sky-50 border-r border-gray-100">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-sky-800 text-center leading-snug">
-            Pelayanan Statistik Terpadu
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-sky-800 text-center leading-snug">
+            Layanan Unggulan Menyajikan Statistik 
           </h1>
           <p className="text-sm md:text-lg text-gray-500 text-center">
             BPS Kabupaten Tanjung Jabung Barat
@@ -71,7 +71,7 @@ const LoginIllustration = ({ lottieWidth = 200 }: LoginIllustrationProps) => {
           {/* Judul mobile — hanya tampil di bawah md */}
           <div className="flex flex-col items-center gap-1 md:hidden text-center">
             <h2 className="text-lg font-semibold text-sky-800">
-              Pelayanan Statistik Terpadu
+              Layanan Unggulan Menyajikan Statistik
             </h2>
             <p className="text-xs text-gray-500">
               BPS Kabupaten Tanjung Jabung Barat

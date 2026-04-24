@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { CheckCircle } from "lucide-react"; // Import icon untuk animasi sukses
 
 const TambahTamu = () => {
   const { data: session } = useSession();
@@ -33,6 +34,7 @@ const TambahTamu = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { toast } = useToast();
   const [phone, setPhone] = useState("");
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false); // State untuk animasi sukses
 
   useEffect(() => {
     if (session && session.user) {
@@ -56,6 +58,7 @@ const TambahTamu = () => {
     }
     if (session && session.user) {
       setLoading(true);
+      setErrorMessage("");
 
       const success = await addGuest({
         email: session.user.email!,
@@ -64,25 +67,33 @@ const TambahTamu = () => {
         purpose: purpose,
         phone,
       });
-      setTimeout(() => {
-        setLoading(false);
-        setErrorMessage("");
-      });
 
       if (success) {
+        // Tampilkan animasi sukses
+        setShowSuccessAnimation(true);
+        
         toast({
           title: "Buku tamu berhasil ditambahkan",
           description: new Date(date).toLocaleDateString("id-ID"),
         });
-        router.push("/buku-tamu");
+        
+        // Jeda 3 detik sebelum redirect
+        setTimeout(() => {
+          setShowSuccessAnimation(false);
+          setLoading(false);
+          router.push("/");
+        }, 3000); // 3000 ms = 3 detik
+        
       } else {
         toast({
-          title: "Buku tamu berhasil gagal ditambahkan",
+          title: "Buku tamu gagal ditambahkan",
           description: new Date(date).toLocaleDateString("id-ID"),
         });
+        setLoading(false);
       }
     }
   };
+
   return (
     <div className="space-y-4 w-full my-8">
       <div className="m-auto w-11/12 md:w-2/3 lg:w-1/2">
@@ -115,6 +126,7 @@ const TambahTamu = () => {
             required={true}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            disabled={loading || showSuccessAnimation} // Disable saat loading atau animasi
           />
           <ComboboxWithLabel
             options={organizationOptions}
@@ -122,12 +134,14 @@ const TambahTamu = () => {
             name="organisasi"
             value={organization}
             onChange={setOrganization}
+            disabled={loading || showSuccessAnimation} // Disable saat loading atau animasi
           />
           <DatePickerWithLable
             label="Tanggal Kedatangan"
             value={date}
             onChange={setDate}
             required={true}
+            disabled={loading || showSuccessAnimation} // Disable saat loading atau animasi
           />
           <InputTextArea
             label="Tujuan Kedatangan"
@@ -136,6 +150,7 @@ const TambahTamu = () => {
             value={purpose}
             placeholder="e.g Permintaan data rumah tangga perikanan"
             onChange={(e) => setPurpose(e.target.value)}
+            disabled={loading || showSuccessAnimation} // Disable saat loading atau animasi
           />
         </CardContent>
         <CardFooter>
@@ -144,13 +159,85 @@ const TambahTamu = () => {
             onClick={(e) => {
               onSubmit(e);
             }}
-            disabled={loading}
+            disabled={loading || showSuccessAnimation}
           >
-            {loading && <Spinner />}
-            Submit
+            {loading && !showSuccessAnimation && <Spinner />}
+            {showSuccessAnimation ? (
+              <div className="flex items-center gap-2 animate-bounce">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span>Berhasil! Mengalihkan...</span>
+              </div>
+            ) : loading ? (
+              "Menyimpan..."
+            ) : (
+              "Submit"
+            )}
           </Button>
         </CardFooter>
       </div>
+
+      {/* Overlay animasi sukses full screen (opsional) */}
+      {showSuccessAnimation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 animate-fade-in">
+          <div className="bg-white rounded-lg p-8 flex flex-col items-center gap-4 shadow-xl animate-scale-up">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
+              <CheckCircle className="h-10 w-10 text-green-500" />
+            </div>
+            <h3 className="text-xl font-bold text-gray-800">Berhasil!</h3>
+            <p className="text-gray-600 text-center">
+              Buku tamu berhasil ditambahkan
+              <br />
+              Mengalihkan ke halaman utama...
+            </p>
+            <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+              <div className="bg-green-500 h-2 rounded-full animate-progress-bar"></div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style jsx>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        
+        @keyframes scale-up {
+          from {
+            transform: scale(0.9);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes progress-bar {
+          from {
+            width: 0%;
+          }
+          to {
+            width: 100%;
+          }
+        }
+        
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+        
+        .animate-scale-up {
+          animation: scale-up 0.3s ease-out;
+        }
+        
+        .animate-progress-bar {
+          animation: progress-bar 3s linear forwards;
+        }
+      `}</style>
     </div>
   );
 };

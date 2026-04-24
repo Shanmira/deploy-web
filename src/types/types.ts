@@ -1,5 +1,6 @@
-import { pengaduanTable } from "@/db/schema";
 
+import { pengaduanTable } from "@/db/schema";
+import { whistleblowingTable } from "@/db/schema";
 export type URL_STATE = {
   message: string;
   redirect_url: string | null;
@@ -19,6 +20,7 @@ export type GUEST = {
 };
 
 export type PENGADUAN = typeof pengaduanTable.$inferSelect;
+export type WHISTLEBLOWING = typeof whistleblowingTable.$inferSelect;
 
 export type USER = {
   email: string;
@@ -31,5 +33,9 @@ export type USER = {
 export type GUEST_ACTION_RES = { guests: GUEST; users: USER | null };
 export type PENGADUAN_ACTION_RES = {
   pengaduan: PENGADUAN;
+  users: USER | null;
+};
+export type WHISTLEBLOWING_ACTION_RES = {
+  whistleblowing: WHISTLEBLOWING;
   users: USER | null;
 };

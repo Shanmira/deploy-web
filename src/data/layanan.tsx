@@ -70,7 +70,18 @@ export const ORGANIZATIONS = [
   { name: "IAIN Tanjung Jabung Barat", kind: "Sekolah" },
   { name: "STAI Tanjung Jabung Barat", kind: "Sekolah" },
 ];
-export const JENIS_PENGADUAN = ["Layanan Perpustakaan", "Layanan Rekomendasi Statistik", "Layanan Konsultasi Statistik", "Layanan Pembinaan Statistik", "Layanan Teknologi Informasi", "Lainnya"];
+export const JENIS_PENGADUAN = ["Layanan Perpustakaan", "Layanan Rekomendasi Statistik", "Layanan Konsultasi Statistik", "Layanan Pembinaan Statistik", "Layanan Teknologi Informasi","Layanan Kepegawaian", "Lainnya"];
+export const JENIS_PELANGGARAN = [
+  "Pelanggaran Disiplin Pegawai",
+  "Penyalahgunaan Wewenang, Mal Administrasi dan Pemerasan/Penganiayaan",
+  "Perilaku Amoral/Perselingkuhan dan Kekerasan dalam Rumah Tangga",
+  "Korupsi",
+  "Pengadaan Barang dan Jasa/BAMA",
+  "Pungutan Liar, Percaloan, dan Pengurusan Dokumen",
+  "Narkoba",
+  "Pelayanan Publik",
+  "Laporan dan Klarifikasi"
+];
 export default function Menu() {
   const { data: session } = useSession();
   const [bukuTamu, pengaduan] = buildLayanans(session?.user?.role);
