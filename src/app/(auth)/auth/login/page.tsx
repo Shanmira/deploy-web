@@ -44,6 +44,12 @@ const LoginIllustration = ({ lottieWidth = 200 }: LoginIllustrationProps) => {
           console.log(e);
           redirect("/auth/login");
         }
+      } else {
+        const callbackFromMiddleware = searchParams.get("callbackUrl");
+        if (callbackFromMiddleware) {
+          setMessage("Silahkan Login Terlebih Dahulu 😁");
+          setCallbackUrl(callbackFromMiddleware);
+        }
       }
     }, [state]);
 
