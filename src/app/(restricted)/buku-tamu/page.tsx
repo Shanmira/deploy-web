@@ -243,9 +243,16 @@ const Page = () => {
 
   const fetchGuests = async () => {
     setLoading(true);
-    const temp = await getGuests();
-    setLoading(false);
-    setGuests(temp.map((guest) => guest.guests));
+    try {
+      const temp = await getGuests();
+      setGuests(temp.map((guest) => guest.guests));
+    } catch (e: any) {
+      if (e.message === "Unauthorized") {
+        router.replace("/auth/login");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

@@ -3,7 +3,8 @@ import type { NextConfig } from "next";
 import "dotenv/config";
 
 const nextConfig: NextConfig = {
-  /* config options here */ images: {
+  allowedDevOrigins: ['172.17.228.191'],
+  images: {
     remotePatterns: [
       {
         protocol: "https",
