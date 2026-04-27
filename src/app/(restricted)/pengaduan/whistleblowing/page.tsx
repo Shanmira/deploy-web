@@ -1,5 +1,5 @@
 "use client";
-import { addPengaduan } from "@/app/action";
+import { addWhistleblowing } from "@/app/action";
 import {
   InputText,
   ComboboxWithLabel,
@@ -17,23 +17,23 @@ import { useToast } from "@/hooks/use-toast";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { PENGADUAN_OPTIONS } from "@/lib/constants";
+import { PELANGGARAN_OPTIONS } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import { CheckCircle } from "lucide-react";
 
-const TambahPengaduan = () => {
+const TambahWhistleblowing = () => {
   const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const { toast } = useToast();
   const router = useRouter();
   const [phone, setPhone] = useState("");
-  const [selectedPengaduan, setSelectedPengaduan] = useState("");
+  const [selectedPelanggaran, setSelectedPelanggaran] = useState("");
   const [suspect, setSuspect] = useState("");
   const [reportedAt, setReportedAt] = useState(new Date());
   const [description, setDescription] = useState("");
   const [proof, setProof] = useState("");
-  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false); // State untuk animasi sukses
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
 
   if (!session) return <Spinner />;
 
@@ -41,17 +41,17 @@ const TambahPengaduan = () => {
     setDescription("");
     setProof("");
     setSuspect("");
-    setSelectedPengaduan("");
+    setSelectedPelanggaran("");
     setPhone("");
   };
 
   const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    
+
     if (
       session.user.email == "" ||
       phone == "" ||
-      selectedPengaduan == "" ||
+      selectedPelanggaran == "" ||
       suspect == "" ||
       !reportedAt ||
       description == "" ||
@@ -63,45 +63,41 @@ const TambahPengaduan = () => {
       });
       return;
     }
-    
+
     if (session && session.user) {
       const data = {
         email: session.user.email!,
         phone: phone,
-        category: selectedPengaduan,
+        category: selectedPelanggaran,
         suspect: suspect,
         reportedAt: reportedAt,
         description: description,
         proof: proof,
       };
-      
+
       setLoading(true);
-      const success = await addPengaduan(data);
+      const success = await addWhistleblowing(data);
 
       if (success) {
-        // Tampilkan animasi sukses
         setShowSuccessAnimation(true);
-        
         resetInput();
         toast({
-          title: "Pengaduan berhasil ditambahkan",
-          description: "Terima kasih atas informasi anda. Saran & kritik sangat anda bermanfaat bagi kami",
+          title: "Whistleblowing berhasil ditambahkan",
+          description: "Terima kasih atas informasi anda. Laporan anda sangat bermanfaat bagi kami",
         });
-        
-        // Jeda 3 detik sebelum redirect
+
         setTimeout(() => {
           setShowSuccessAnimation(false);
           setLoading(false);
-          router.push("/pengaduan?mode=pengaduan");
-        }, 3000); // 3000 ms = 3 detik
-        
+          router.push("/pengaduan?mode=whistleblowing");
+        }, 3000);
       } else {
         toast({
-          title: "Pengaduan gagal ditambahkan",
+          title: "Whistleblowing gagal ditambahkan",
           description: new Date(reportedAt).toLocaleDateString("id-ID"),
         });
         setLoading(false);
-        setErrorMessage("Gagal menambahkan pengaduan, silakan coba lagi");
+        setErrorMessage("Gagal menambahkan whistleblowing, silakan coba lagi");
       }
     }
   };
@@ -111,7 +107,7 @@ const TambahPengaduan = () => {
       <div className="m-auto w-11/12 md:w-2/3 lg:w-1/2">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-primary text-center">
-            Form Pengaduan
+            Form Whistleblowing
           </CardTitle>
           <h2 className="text-center text-lg">
             BPS Kabupaten Tanjung Jabung Barat
@@ -135,13 +131,12 @@ const TambahPengaduan = () => {
             onChange={(e) => setPhone(e.target.value)}
             disabled={loading || showSuccessAnimation}
           />
-
           <ComboboxWithLabel
-            options={PENGADUAN_OPTIONS}
-            label="Jenis Layanan"
-            name="Jenis Layanan"
-            value={selectedPengaduan}
-            onChange={setSelectedPengaduan}
+            options={PELANGGARAN_OPTIONS}
+            label="Jenis Pelanggaran"
+            name="Jenis Pelanggaran"
+            value={selectedPelanggaran}
+            onChange={setSelectedPelanggaran}
             disabled={loading || showSuccessAnimation}
           />
           <DatePickerWithLable
@@ -177,12 +172,11 @@ const TambahPengaduan = () => {
             disabled={loading || showSuccessAnimation}
           />
         </CardContent>
+
         <CardFooter>
           <Button
             className="w-full md:w-1/3 flex gap-2 justify-center ease-in-out"
-            onClick={(e) => {
-              onSubmit(e);
-            }}
+            onClick={(e) => onSubmit(e)}
             disabled={loading || showSuccessAnimation}
           >
             {loading && !showSuccessAnimation && <Spinner />}
@@ -207,9 +201,9 @@ const TambahPengaduan = () => {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center animate-pulse">
               <CheckCircle className="h-12 w-12 text-green-500" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-800">Pengaduan Terkirim!</h3>
+            <h3 className="text-2xl font-bold text-gray-800">Pelanggaran Terkirim!</h3>
             <p className="text-gray-600 text-center">
-              Terima kasih atas pengaduan Anda.
+              Terima kasih atas laporan Anda.
               <br />
               Kami akan segera menindaklanjuti laporan Anda.
               <br />
@@ -229,61 +223,28 @@ const TambahPengaduan = () => {
 
       <style jsx>{`
         @keyframes fade-in {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        
         @keyframes scale-up {
-          from {
-            transform: scale(0.9);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
+          from { transform: scale(0.9); opacity: 0; }
+          to { transform: scale(1); opacity: 1; }
         }
-        
         @keyframes progress-bar {
-          from {
-            width: 0%;
-          }
-          to {
-            width: 100%;
-          }
+          from { width: 0%; }
+          to { width: 100%; }
         }
-        
         @keyframes bounce {
-          0%, 100% {
-            transform: translateY(0);
-          }
-          50% {
-            transform: translateY(-5px);
-          }
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
         }
-        
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
-        }
-        
-        .animate-scale-up {
-          animation: scale-up 0.3s ease-out;
-        }
-        
-        .animate-progress-bar {
-          animation: progress-bar 3s linear forwards;
-        }
-        
-        .animate-bounce {
-          animation: bounce 0.5s ease-in-out infinite;
-        }
+        .animate-fade-in { animation: fade-in 0.3s ease-out; }
+        .animate-scale-up { animation: scale-up 0.3s ease-out; }
+        .animate-progress-bar { animation: progress-bar 3s linear forwards; }
+        .animate-bounce { animation: bounce 0.5s ease-in-out infinite; }
       `}</style>
     </div>
   );
 };
 
-export default TambahPengaduan;
+export default TambahWhistleblowing;

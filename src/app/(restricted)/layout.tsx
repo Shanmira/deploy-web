@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const router = useRouter();
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (status === "loading" || status === "unauthenticated") {
       const message = "Silahkan login terlebih dahulu 😁";
       const state = { message: message, redirect_url: pathname };
       const stateString = JSON.stringify(state);

@@ -44,3 +44,6 @@ next-env.d.ts
 #db
 backup-pst1507-db_cluster-23-05-2025@04-35-38.backup
 backup-pst1507-db_cluster-23-05-2025@04-35-38.backup.gz
+
+#service account
+service-account.json

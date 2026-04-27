@@ -21,12 +21,19 @@ export const config = {
     }),
   ],
   callbacks: {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.role = user.role;
+      }
+      return token;
+    },
     session: async ({ session }) => {
       if (session.user) {
         const dbUser = await getUserByEmail(session.user.email || "");
         if (dbUser.length > 0) {
           session.user.organization = dbUser[0].organization;
           session.user.name = dbUser[0].name;
+          session.user.role = dbUser[0].role;
         }
       }
       return Promise.resolve(session);

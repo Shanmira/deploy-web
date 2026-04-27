@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { DatePicker } from "@/components/datepicker";
+import { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { GuestTable } from "@/components/table";
@@ -28,7 +30,7 @@ import { InputText, InputTextArea } from "@/components/input";
 import { deleteGuest, getGuests, updateGuest } from "@/app/action";
 import { toast } from "@/hooks/use-toast";
 import Spinner from "@/components/ui/loading";
-import { Download, Plus } from "lucide-react";
+import { Download } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
 
 const DialogGeneric = ({
@@ -37,7 +39,6 @@ const DialogGeneric = ({
   description,
   open = false,
   setOpen = () => {},
-  // submitButton,
   content,
 }: {
   title: string;
@@ -45,7 +46,6 @@ const DialogGeneric = ({
   description?: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   trigger?: React.ReactNode;
-  // submitButton?: React.ReactNode;
   content: React.ReactNode;
 }) => {
   return (
@@ -81,15 +81,12 @@ const AlertDialogGeneric = ({
   open = false,
   setOpen = () => {},
   content,
-}: // submitButton,
-
-{
+}: {
   title: string;
   open?: boolean;
   description?: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   trigger?: React.ReactNode;
-  // submitButton?: React.ReactNode;
   content: React.ReactNode;
 }) => {
   return (
@@ -110,7 +107,14 @@ const AlertDialogGeneric = ({
     </AlertDialog>
   );
 };
-const EditGuestForm = ({ guest }: { guest: GUEST }) => {
+
+const EditGuestForm = ({ 
+  guest, 
+  onSuccess 
+}: { 
+  guest: GUEST; 
+  onSuccess: () => void;
+}) => {
   const [purpose, setPurpose] = useState(guest.purpose);
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -124,17 +128,21 @@ const EditGuestForm = ({ guest }: { guest: GUEST }) => {
       setLoading(false);
       return;
     }
+    
     const payload = {
       id: guest.id,
       purpose: purpose,
     };
+    
     const success = await updateGuest(payload);
+    
     if (success) {
       toast({
         title: "Buku tamu berhasil diupdate",
         description: new Date(guest.visitedAt).toLocaleDateString("id-ID"),
       });
       setErrorMessage("");
+      onSuccess(); // Panggil callback untuk trigger refresh
     } else {
       toast({
         title: "Buku tamu gagal diupdate",
@@ -143,6 +151,7 @@ const EditGuestForm = ({ guest }: { guest: GUEST }) => {
     }
     setLoading(false);
   };
+  
   return (
     <div className="space-y-4 md:space-y-6 ">
       <p className="text-red-500 text-xs md:text-sm">{errorMessage}</p>
@@ -152,6 +161,7 @@ const EditGuestForm = ({ guest }: { guest: GUEST }) => {
         value={guest.guestEmail}
         disabled={true}
       />
+     
       <InputTextArea
         label={"Tujuan Kedatangan"}
         name={"purpose"}
@@ -178,69 +188,110 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
   const [guests, setGuests] = useState<GUEST[] | null>(null);
-
-  const onAddGuestClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    if (router) {
-      router.push("/buku-tamu/tambah");
-    }
-    setLoading(false);
-  };
+  const [range, setRange] = useState<DateRange>({ from: undefined, to: undefined });
+  const [refreshTableTrigger, setRefreshTableTrigger] = useState(0); // State untuk trigger refresh table
 
   const dialogCallback = (guest: GUEST, dialogTriggerState: boolean) => {
     setSelectedGuest(guest);
     setDialogOpen(dialogTriggerState);
   };
-  const alertDialogCallback = (
-    guest: GUEST,
-    alertDialogTriggerState: boolean
-  ) => {
+  
+  const alertDialogCallback = (guest: GUEST, alertDialogTriggerState: boolean) => {
     setSelectedGuest(guest);
     setAlertDialogOpen(alertDialogTriggerState);
   };
+  
+  // Fungsi untuk handle setelah hapus berhasil
+  const handleDeleteSuccess = () => {
+    setAlertDialogOpen(false); // Tutup alert dialog
+    setRefreshTableTrigger(prev => prev + 1); // Trigger refresh table
+    // Refresh data guests untuk export
+    fetchGuests();
+  };
+
   const onDeleteHandler = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
-    if (!selectedGuest) return;
+    if (!selectedGuest) {
+      setLoading(false);
+      return;
+    }
+    
     const success = await deleteGuest({ id: selectedGuest.id });
+    
     if (success) {
       toast({
         title: "Data tamu berhasil dihapus",
-        // description: new Date(guest.visitedAt).toLocaleDateString("id-ID"),
       });
-      // setErrorMessage("");
+      handleDeleteSuccess(); // Panggil function untuk handle setelah hapus
     } else {
       toast({
         title: "Data tamu gagal dihapus",
-        // description: new Date(guest.visitedAt).toLocaleDateString("id-ID"),
       });
-    }
-    setLoading(false);
-    setAlertDialogOpen(false);
-    router.push("/buku-tamu");
-  };
-  useEffect(() => {
-    const fetchGuests = async () => {
-      setLoading(true);
-      const temp = await getGuests();
       setLoading(false);
+      setAlertDialogOpen(false);
+    }
+  };
+
+  // Fungsi untuk handle setelah edit berhasil
+  const handleEditSuccess = () => {
+    setDialogOpen(false); // Tutup dialog edit
+    setRefreshTableTrigger(prev => prev + 1); // Trigger refresh table
+    // Refresh data guests untuk export
+    fetchGuests();
+  };
+
+  const fetchGuests = async () => {
+    setLoading(true);
+    try {
+      const temp = await getGuests();
       setGuests(temp.map((guest) => guest.guests));
-      console.log(temp);
-    };
+    } catch (e: any) {
+      if (e.message === "Unauthorized") {
+        router.replace("/auth/login");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchGuests();
   }, []);
 
   const onExportDataClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!guests || guests?.length === 0) return;
-    exportToExcel(remapData(guests), "daftar-tamu");
+    exportToExcel(
+      remapData(guests, range.from?.toISOString(), range.to?.toISOString()),
+      "daftar-tamu"
+    );
   };
 
-  const remapData = (guests: GUEST[]) => {
-    return guests.map((guest) => {
+  const remapData = (guests: GUEST[], startDate?: string, endDate?: string) => {
+    const filtered = guests.filter((p) => {
+      if (!startDate && !endDate) return true;
+
+      const [y, m, d] = p.visitedAt.split("-").map(Number);
+      const eventDate = new Date(y, m - 1, d);
+
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      if (start) start.setHours(0, 0, 0, 0);
+      if (end) end.setHours(23, 59, 59, 999);
+
+      if (start && end) return eventDate >= start && eventDate <= end;
+      if (start) return eventDate >= start;
+      if (end) return eventDate <= end;
+
+      return true;
+    });
+    
+    return filtered.map((guest) => {
       const temp: { [key: string]: string } = {};
       temp["email"] = guest.guestEmail;
+      temp["guest_phone"] = guest.guestPhone;
       temp["tujuan"] = guest.purpose;
       temp["tanggal_kunjungan"] = guest.visitedAt;
       return temp;
@@ -251,20 +302,15 @@ const Page = () => {
     <div className="w-11/12 md:w-8/12 m-auto my-8 space-y-4 md:space-y-8">
       <div className="space-y-2">
         <h1 className="text-primary text-lg md:text-2xl font-medium">
-          Daftar Tamu PST{" "}
+          Daftar Tamu PST
         </h1>
         <h2 className="text-sm md:text-lg">
           BPS Kabupaten Tanjung Jabung Barat
         </h2>
       </div>
+      
       <div className="w-full flex md:justify-end items-end gap-2">
-        <Button
-          onClick={onAddGuestClick}
-          className="flex items-center gap-2"
-          size="sm"
-        >
-          {loading ? <Spinner /> : <Plus size={14} />} Tambah Tamu
-        </Button>
+        <DatePicker mode="range" value={range} callback={setRange} />
         <Button
           size="sm"
           onClick={onExportDataClick}
@@ -274,15 +320,16 @@ const Page = () => {
           {loading ? <Spinner /> : <Download size={14} />}Export Data
         </Button>
       </div>
+      
       <DialogGeneric
         title={"Update Tamu"}
         open={dialogOpen}
         setOpen={setDialogOpen}
-        content={<EditGuestForm guest={selectedGuest as GUEST} />}
+        content={<EditGuestForm guest={selectedGuest as GUEST} onSuccess={handleEditSuccess} />}
       />
+      
       <AlertDialogGeneric
         title={"Hapus Data"}
-        // trigger={<span>Buka</span>}
         open={alertDialogOpen}
         setOpen={setAlertDialogOpen}
         content={
@@ -298,6 +345,7 @@ const Page = () => {
               variant="destructive"
               className="w-full"
               onClick={onDeleteHandler}
+              disabled={loading}
             >
               {loading && <Spinner />}
               Hapus
@@ -305,10 +353,14 @@ const Page = () => {
           </div>
         }
       />
+      
       <div className="w-full overflow-x-scroll">
         <GuestTable
           dialogCallback={dialogCallback}
           alertDialogCallback={alertDialogCallback}
+          startDate={range.from?.toISOString()}
+          endDate={range.to?.toISOString()}
+          refreshTrigger={refreshTableTrigger} // Kirim trigger refresh ke GuestTable
         />
       </div>
     </div>
